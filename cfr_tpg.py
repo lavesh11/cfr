@@ -67,8 +67,6 @@ def toInput(cur_state, player, history):
     return ret
 
 class KuhnTrainer(object):
-    def __init__(self):
-        self.total = 0
     class Node:
         def __init__(self):
             self.infoSet = ""
@@ -126,7 +124,6 @@ class KuhnTrainer(object):
             player = 0
             util += self.cfr(player, cur_state, "", 1, 1)
         
-        print('total recursion: ', self.total)
         print("Average game value: ",util / iterations)
         print("iterations: ", iterations)
         print(len(nodeMap))
@@ -138,7 +135,6 @@ class KuhnTrainer(object):
             print(k, n.getAverageStrategy())
     
     def cfr(self, player, cur_state, history, p0, p1):
-        self.total += 1
         opponent = 1 - player
         gameEnd = game.gameover(cur_state)
         winner = gameEnd-1
@@ -152,7 +148,7 @@ class KuhnTrainer(object):
         if gameEnd:
             if Log:
                 print('Return!!!')
-            return 5 if player == winner else -5
+            return 1 if player == winner else -1
 
         infoSet = toInput(cur_state, player, history)
         node = nodeMap.get(infoSet)
@@ -182,5 +178,5 @@ class KuhnTrainer(object):
         return nodeUtil
 
 if __name__ == '__main__':
-        iterations = 1000000
+        iterations = 2000000
         KuhnTrainer().train(iterations)

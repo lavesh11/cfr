@@ -5,6 +5,8 @@ from lib.cardset import carddict
 import copy
 import numpy as np
 import time
+import sys
+sys.setrecursionlimit(2000)
 # potAmount, currentChaal and last actions for the last 2 rounds
 
 Log = False
@@ -59,6 +61,7 @@ def performAction(cur_state, player, a):
     return cur_state
 
 def toInput(cur_state, player, history):
+    # ret = str(game.map_cards(cur_state['P'+str(player)+'_cards'])) + history
     ret = str(game.map_cards(cur_state['P'+str(player)+'_cards'])) + '-' + str(cur_state['Pot_amount']//cur_state['Boot'])
     ret = ret + '-' + str(cur_state['Last_player_chaal']//cur_state['Boot']) + history
     return ret
@@ -173,5 +176,5 @@ class KuhnTrainer(object):
         return nodeUtil
 
 if __name__ == '__main__':
-        iterations = 5000000
+        iterations = 1#5000000
         KuhnTrainer().train(iterations)

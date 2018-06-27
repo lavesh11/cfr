@@ -6,8 +6,9 @@ import copy
 import numpy as np
 import time
 import sys
-sys.setrecursionlimit(2000)
+import pickle
 # potAmount, currentChaal and last actions for the last 2 rounds
+sys.setrecursionlimit(2000)
 
 Log = False
 PACK = 0
@@ -108,9 +109,11 @@ class KuhnTrainer(object):
     def train(self, iterations):
         util = 0.0
         for i in range(iterations):
-            if i % 500000 == 0:
+            if i and i % 100000 == 0:
+                input_file = 'cfrStrategy'+str(i)+'.pickle'
+                with open(input_file, 'wb') as f:
+                    pickle.dump(nodeMap,f)
                 ct = 0
-                print('*********************************************')
                 for k,n in nodeMap.items():
                     ct+=1
                     if ct > 10:
@@ -121,6 +124,7 @@ class KuhnTrainer(object):
                 game.printTable(cur_state)
             player = 0
             util += self.cfr(player, cur_state, "", 1, 1)
+        
         print("Average game value: ",util / iterations)
         print("iterations: ", iterations)
         print(len(nodeMap))
@@ -131,7 +135,6 @@ class KuhnTrainer(object):
                 break
             print(k, n.getAverageStrategy())
     
-
     def cfr(self, player, cur_state, history, p0, p1):
         opponent = 1 - player
         gameEnd = game.gameover(cur_state)
@@ -146,7 +149,7 @@ class KuhnTrainer(object):
         if gameEnd:
             if Log:
                 print('Return!!!')
-            return 5 if player == winner else -5
+            return 1 if player == winner else -1
 
         infoSet = toInput(cur_state, player, history)
         node = nodeMap.get(infoSet)
@@ -176,5 +179,5 @@ class KuhnTrainer(object):
         return nodeUtil
 
 if __name__ == '__main__':
-        iterations = 1#5000000
+        iterations = 2000000
         KuhnTrainer().train(iterations)

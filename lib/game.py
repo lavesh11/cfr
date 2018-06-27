@@ -35,7 +35,7 @@ Table = \
 
 bucketChips = [
     ('Bucket','Boot','Max Chaal','Max Pot','Min Chips','Max Chips','Expected Max Ratio'),
-    (1,5,640,5120,0,10240,2.00),
+    (1,5,640/16,5120/16,0,10240,2.00),
     (2,10,1280,10240,10241,20480,2.00),
     (3,20,2560,20480,20481,40960,2.00),
     (4,50,6400,51200,40961,102400,2.00),
@@ -198,6 +198,10 @@ def gameover(Table):
     if total == 0:
         return 0
     else:
+        if Table['P0_move'] == PACK:
+            return 2
+        elif Table['P1_move'] == PACK:
+            return 1
         if Table['P0_cards'] > Table['P1_cards']:
             return 1
         else:
@@ -228,7 +232,10 @@ def available_moves(Table, pid):
 
     actions = []
     actions.append(1)
-    actions.append(1)
+    if player_money >= min_amount:
+        actions.append(1)
+    else:
+        actions.append(0)
     if min_amount != min(player_money,max_amount):
         actions.append(1)
     else:
